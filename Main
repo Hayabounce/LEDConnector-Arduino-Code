@@ -1,0 +1,37 @@
+#include <FastLED.h>
+
+#define NUM_LEDS 96 // 24 leds in 40 cm, 4 walls
+// For led chips like WS2812, which have a data line, ground, and power, you just
+// need to define DATA_PIN.
+#define DATA_PIN 3
+
+// This is an array of leds.  One item for each led in your strip.
+CRGB leds[NUM_LEDS];
+
+// This function sets up the ledsand tells the controller about them
+void setup() {
+	// sanity check delay - allows reprogramming if accidently blowing power w/leds
+   	delay(2000);
+    FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
+    Serial.begin(115200);
+}
+
+// This function runs over and over, and is where you do the magic to light
+// your leds.
+void loop() {
+  uint8_t brightness = 20; 
+  Serial.println(brightness);
+  // threshold brightness to prevent flickering
+  if (brightness >= 2) {
+  FastLED.setBrightness(brightness);
+  fill_solid(leds, NUM_LEDS, CRGB::White);
+  }
+  else {
+  Serial.println(brightness);
+  FastLED.setBrightness(brightness);
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
+  }
+      // Show the leds 
+      FastLED.show();
+      delay(500);
+   }
